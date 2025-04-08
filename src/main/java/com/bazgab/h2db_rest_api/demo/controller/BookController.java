@@ -13,53 +13,51 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-
 public class BookController {
-    //firstly to add a controller we need to instantiate the previously added repository
+    // firstly to add a controller we need to instantiate the previously added repository
     @Autowired
-    //Autowiring for pulling the interface
+    // Autowiring for pulling the interface
     private BookRepository bookRepository;
 
 
-    //Below we will have to declare the CRUD methods for the controller to control
-    //Annotations will correspond to the HTTP Method required by the function
+    // Below we will have to declare the CRUD methods for the controller to control
+    // Annotations will correspond to the HTTP Method required by the function
     @GetMapping("/getAllBooks")
-    //In order for the method to return something, we have can't have the return type be 'void'
-    //So we need to specify the return as a List since we are utilizing the in-memory DB
+    // In order for the method to return something, we have can't have the return type be 'void'
+    // So we need to specify the return as a List since we are utilizing the in-memory DB
     public ResponseEntity<List<Book>> getAllBooks() {
         try {
-            //Declare a new ArrayList utilizing the ResponseEntity List
+            // Declare a new ArrayList utilizing the ResponseEntity List
             List<Book> bookList = new ArrayList<>();
-            //Using the repository, we use the findAll() Method from JPA and
+            // Using the repository, we use the findAll() Method from JPA and
             bookRepository.findAll().forEach(bookList::add);
-            //Firstly we need to check if the List is empty and return no content in case it is
+            // Firstly we need to check if the List is empty and return no content in case it is
             if (bookList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                //Otherwise we return the HTTP Status as OK
+                // Otherwise we return the HTTP Status as OK
                 return new ResponseEntity<>(bookList,HttpStatus.OK);
             }
         } catch (Exception e) {
-            //Return HTTP Status as Internal Server Error/Bad Request
+            // Return HTTP Status as Internal Server Error/Bad Request
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
-    //Passing the Path variable to fetch id
+    // Passing the Path variable to fetch id
     @GetMapping("/getBookById/{id}")
-    //Here we return not the entire Book List, but a single book, therefore the ResponseEntity is represented
-    //by just the single value
+    // Here we return not the entire Book List, but a single book, therefore the ResponseEntity is represented
+    // by just the single value
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        //We are introducing a try catch method in all API functions to ensure proper handling of errors
+        // We are introducing a try catch method in all API functions to ensure proper handling of errors
         try {
-            //This is going to return an Optional object (because the id might not be present)
+            // This is going to return an Optional object (because the id might not be present)
             Optional<Book> bookOptional =  bookRepository.findById(id);
-            //If the bookOptional object, referenced by the id is present, we will return the HTTP Status as OK
+            // If the bookOptional object, referenced by the id is present, we will return the HTTP Status as OK
             if (bookOptional.isPresent()) {
-                //We return the bookOptional object with the .get() method to fetch the data
+                // We return the bookOptional object with the .get() method to fetch the data
                 return new ResponseEntity<>(bookOptional.get(), HttpStatus.OK);
             } else {
-                //If it isn't present we will return that the object has not been found
+                // If it isn't present we will return that the object has not been found
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
