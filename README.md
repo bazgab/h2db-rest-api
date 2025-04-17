@@ -14,3 +14,4 @@ As H2 is an in-memory database, the first step in instantiating the db would be 
 | POST          | "title", "author"  | http://localhost:9090/addBook             |
 | UPDATE        | "id"               | http://localhost:9090/updateBookById/{id} |
 | DELETE        | "title", "author"  | http://localhost:9090/deleteBookById/{id} |
+
